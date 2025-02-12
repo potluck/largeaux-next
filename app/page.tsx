@@ -1,101 +1,87 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import axios from 'axios';
+import '../styles/home.css';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    const formatPhoneNumber = (phoneNumber: string) => {
+        const cleaned = phoneNumber.replace(/\D/g, '');
+        if (cleaned.length !== 10) {
+            return null;
+        }
+        return `1${cleaned}`;
+    };
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [error, setError] = useState('');
+    const [status, setStatus] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value.replace(/\D/g, '');
+        setPhoneNumber(value);
+    };
+
+    const makeApiCall = async () => {
+        setError('');
+        const formattedNumber = formatPhoneNumber(phoneNumber);
+        
+        if (!formattedNumber) {
+            setError('Please enter a valid 10-digit phone number');
+            return;
+        }
+
+        setIsLoading(true);
+        setStatus('Making API call...');
+
+        try {
+            const data = {
+                pathway_id: "ef791f03-091e-4381-818f-c9798e9a2a30",
+                phone_number: formattedNumber,
+                model: "enhanced",
+                language: "en",
+                voice: "nat",
+                max_duration: 12,
+                record: false
+            };
+
+            const response = await axios.post('https://api.bland.ai/v1/calls', data, {
+                headers: { Authorization: `Bearer ${process.env.NEXT_PUBLIC_BLAND_AI_API_KEY}` }
+            });
+            
+            setStatus(`Call initiated successfully! Call ID: ${response.data.call_id}`);
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || error.message;
+            setStatus(`Error: ${errorMessage}`);
+            console.error('API call failed:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    return (
+        <div className="container">
+            <h1>Hello World</h1>
+            <div className="date">January 30, 2025</div>
+            <input 
+                type="tel" 
+                value={phoneNumber}
+                onChange={handlePhoneInput}
+                className="phone-input" 
+                placeholder="Enter phone number (e.g., 8328631936)"
+                maxLength={10}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <div className="error-message">{error}</div>
+            <button 
+                className="api-button" 
+                onClick={makeApiCall} 
+                disabled={isLoading}
+            >
+                Make API Call
+                {isLoading && <span className="loading-spinner" />}
+            </button>
+            <div id="status">{status}</div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }

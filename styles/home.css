@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&display=swap');
+
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+    color: #d4af37;
+    font-family: 'Cormorant Garamond', serif;
+    overflow: hidden;
+}
+
+.container {
+  text-align: center;
+  padding: 2rem;
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  border-radius: 10px;
+  background: rgba(26, 26, 26, 0.8);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  animation: fadeIn 1.5s ease-out;
+  position: relative;
+}
+
+h1 {
+  font-size: 3.5rem;
+  font-weight: 300;
+  margin: 0;
+  letter-spacing: 4px;
+  animation: slideIn 1s ease-out;
+}
+
+.date {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  color: rgba(212, 175, 55, 0.7);
+  font-weight: 300;
+  letter-spacing: 2px;
+  animation: slideIn 1s ease-out 0.5s both;
+}
+
+.api-button {
+  margin-top: 2rem;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  background: transparent;
+  border: 2px solid #d4af37;
+  color: #d4af37;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: 1px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.api-button:hover {
+  background: rgba(212, 175, 55, 0.1);
+  transform: translateY(-2px);
+}
+
+.api-button:active {
+  transform: translateY(0);
+}
+
+.api-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  border-color: rgba(212, 175, 55, 0.5);
+}
+
+.phone-input {
+  margin-top: 2rem;
+  padding: 0.8rem 1.2rem;
+  font-size: 1.1rem;
+  background: transparent;
+  border: 2px solid #d4af37;
+  color: #d4af37;
+  border-radius: 5px;
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: 1px;
+  width: 250px;
+  transition: all 0.3s ease;
+}
+
+.phone-input:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+.phone-input::placeholder {
+  color: rgba(212, 175, 55, 0.5);
+}
+
+.error-message {
+  color: #ff6b6b;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  height: 1.2em;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  border-radius: 50%;
+  border-top-color: #d4af37;
+  animation: spin 1s linear infinite;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+#status {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  height: 1.5em;
+  color: rgba(212, 175, 55, 0.8);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from {
+      transform: translateY(20px);
+      opacity: 0;
+  }
+  to {
+      transform: translateY(0);
+      opacity: 1;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.container::before,
+.container::after {
+  content: '';
+  position: absolute;
+  width: 100px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #d4af37, transparent);
+  animation: shimmer 2s infinite;
+}
+
+.container::before {
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.container::after {
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@keyframes shimmer {
+  0% { opacity: 0.3; }
+  50% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
