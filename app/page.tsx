@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import '../styles/home.css';
 
 export default function Home() {
@@ -51,8 +51,19 @@ export default function Home() {
             });
             
             setStatus(`Call initiated successfully! Call ID: ${response.data.call_id}`);
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || error.message;
+        } catch (error: unknown) {
+            let errorMessage: string;
+            if (error instanceof AxiosError) {
+                if (error.response?.status === 401) {
+                    errorMessage = 'Authentication failed. Please check your API key.';
+                } else if (error.response?.status === 429) {
+                    errorMessage = 'Too many requests. Please try again later.';
+                } else {
+                    errorMessage = error.response?.data?.message || error.message;
+                }
+            } else {
+                errorMessage = 'An unknown error occurred';
+            }
             setStatus(`Error: ${errorMessage}`);
             console.error('API call failed:', error);
         } finally {
